@@ -1,0 +1,36 @@
+name: CashControl Cloud Auto-Build
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch: # Te permet de lancer la compilation manuellement si besoin
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Récupération du code
+        uses: actions/checkout@v3
+      
+      - name: ☕ Configuration de Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+          
+      - name: 🚀 Configuration de Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.19.0'
+          cache: true # Accélère les prochaines compilations
+          
+      - name: 📦 Installation des dépendances
+        run: flutter pub get
+        
+      - name: 🛠 Compilation de l'APK (Release)
+        run: flutter build apk --release
+        
+      - name: 📤 Livraison de l'APK
+        uses: actions/upload-artifact@v3
+        with:
+          name: CashControl-Cloud-APK
+          path: build/app/outputs/flutter-apk/app-release.apk
