@@ -23,18 +23,15 @@ jobs:
           flutter-version: '3.22.0' 
           cache: true
           
-      - name: 🧹 Nettoyage et Préparation
-        run: |
-          flutter clean
-          flutter pub get
+      - name: 📦 Installation des dépendances
+        run: flutter pub get
         
-      - name: 🛠 Compilation de l'APK (Release)
-        # On ajoute des flags pour stabiliser le build Gradle
-        run: flutter build apk --release --no-pub --debug-info
+      - name: 🛠 Compilation de l'APK (Standard Release)
+        # Suppression de l'option erronée
+        run: flutter build apk --release
         
       - name: 📤 Livraison de l'APK
         uses: actions/upload-artifact@v4
         with:
           name: CashControl-Cloud-APK
           path: build/app/outputs/flutter-apk/app-release.apk
-          if-no-files-found: error
